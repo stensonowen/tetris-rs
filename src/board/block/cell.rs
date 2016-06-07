@@ -50,7 +50,9 @@ pub struct Cell {
 }
 
 impl Cell {
+    #[allow(dead_code)]
     pub fn blank() -> Cell {
+        //mostly used for debugging
         Cell {
             x:  0,
             y:  0,

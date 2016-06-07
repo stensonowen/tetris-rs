@@ -1,8 +1,6 @@
 //mod block;
 mod board;
 use board::board::*;
-use board::block::*;
-use board::block::cell::*;
 extern crate rand; 
 
 fn main() {
@@ -18,22 +16,8 @@ fn main() {
     //p.rotate_counterclockwise();
     //b.incorporate(&p);
     //println!("{}", b);
-    let mut n = 0;
-    for _ in 0..20 {
-        //let mut p=Piece::new(5,5,Shape::rand(),Color::rand());
-        let mut p = Piece::new(
-            rand::random::<usize>() % WIDTH,
-            rand::random::<usize>() % HEIGHT,
-            Shape::rand(),
-            Color::rand());
-        let pts = p.rotate_ccw();
-        if b.compatible2(&pts) {
-            p.set_coords(&pts);
-            b.incorporate(&p);
-            n += 1;
-        }
-    }
-    println!("{} / 100", n);
+    b.new_piece();
+    b.rotate();
     println!("{}", b);
 
 }
