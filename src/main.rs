@@ -1,6 +1,6 @@
 //mod block;
 mod board;
-use board::*;
+use board::board::*;
 use board::block::*;
 use board::block::cell::*;
 extern crate rand; 
@@ -22,8 +22,8 @@ fn main() {
     for _ in 0..20 {
         //let mut p=Piece::new(5,5,Shape::rand(),Color::rand());
         let mut p = Piece::new(
-            rand::random::<usize>() % 20,
-            rand::random::<usize>() % 20,
+            rand::random::<usize>() % WIDTH,
+            rand::random::<usize>() % HEIGHT,
             Shape::rand(),
             Color::rand());
         let pts = p.rotate_ccw();
