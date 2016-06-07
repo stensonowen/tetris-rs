@@ -12,7 +12,10 @@ const HEIGHT: usize = 20;
 //Board is an array of rows
 #[derive(Debug)]
 pub struct Board {
-    table: [[Option<Cell>; WIDTH]; HEIGHT]
+    //stores the actual table itself (2d array)
+    //and the piece that is currently moving
+    table: [[Option<Cell>; WIDTH]; HEIGHT],
+    block: Option<Piece>,
 }
 
 
@@ -36,7 +39,8 @@ impl fmt::Display for Board {
 impl Board{
     pub fn new() -> Board {
         Board {
-            table: [[None; WIDTH]; HEIGHT]
+            table: [[None; WIDTH]; HEIGHT],
+            block: None,
         }
     }
     pub fn random() -> Board {
@@ -61,6 +65,11 @@ impl Board{
     }
     pub fn get(&self, x:usize, y:usize) -> Option<Cell> {
         self.table[y][x]
+    }
+    pub fn compatible2(&self, points: &[(usize,usize); 4])->bool{
+        points.iter().all( | &(x,y) | 
+            x<WIDTH && y<HEIGHT &&
+                self.get(x,y).is_none())
     }
     pub fn compatible(&self, p: &Piece) -> bool {
         p.cells.iter().all(
