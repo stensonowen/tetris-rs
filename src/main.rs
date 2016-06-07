@@ -17,7 +17,7 @@ fn main() {
     //b.incorporate(&p);
     //println!("{}", b);
     b.new_piece();
-    b.rotate();
+    b.rotate2();
     println!("{}", b);
 
 }

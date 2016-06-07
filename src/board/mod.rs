@@ -70,7 +70,7 @@ pub mod board {
                     Shape::rand(),
                     Color::rand()));
         }
-        pub fn rotate(&mut self) {
+        /*pub fn rotate(&mut self) {
             //rotates the active piece if it can be rotated
             //self.block.unwrap();
             if let Some(mut block) = self.block {
@@ -87,20 +87,39 @@ pub mod board {
             //        self.block = Some(block);
             //    }
             //}
+        }*/
+        pub fn rotate2(&mut self) {
+            if self.block.is_some() {
+                let rotated = self.block.unwrap().rotate4();
+                if self.compatible2(&rotated) {
+                    self.block = Some(rotated);
+                }
+            }
         }
         pub fn shift(&mut self, dx: i32, dy: i32) -> bool {
             //attempts to shift self.
             //self.block.unwrap().x = 0;
             //let = self.block.unwrap().cells.into_iter();
             //if let Some(block) =
+            /*should this functionality be here (it's simple) 
+             * or in Piece (that's where rotate is.
+             * Should I move rotate?
+             */
             true
         }
-        fn compatible(&self, 
+		fn compatible2(&self, p: &Piece) -> bool {
+			p.cells.iter().all(
+				|&Cell{x,y,..}|
+				p.x+x < WIDTH  &&
+				p.y+y < HEIGHT &&
+				self.get(x,y).is_none())
+		}
+        /*fn compatible(&self, 
                       points: &[(usize,usize); 4]) -> bool {
             points.iter().all( | &(x,y) | 
                 x<WIDTH && y<HEIGHT &&
                     self.get(x,y).is_none())
-        }
+        }*/
         fn incorporate(&mut self, p: &Piece) {
             for &c in p.cells.iter() {
                 self.table[p.y+c.y][p.x+c.x] = Some(c);

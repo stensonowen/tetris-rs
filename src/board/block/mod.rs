@@ -13,7 +13,7 @@ pub struct Piece {
 }
 
 impl Piece {
-    pub fn rotate(&self) -> [(usize,usize); 4] {
+    /*pub fn rotate(&self) -> [(usize,usize); 4] {
         //you live on the stack and you live on the stack
         //everyone gets to live on the stack!
         // (x',y') = (x*cos(t)-y*sin(t),x*sin(t)+y*cos(t)
@@ -31,25 +31,26 @@ impl Piece {
             points[i] = (self.x+max_y-y, self.y+x)
         }
         points
+    }*/
+    pub fn rotate4(&self) -> Piece {
+        let mut piece = self.clone();
+        let max_y = piece.cells.iter().fold(
+            std::usize::MIN, 
+            |max, c| std::cmp::max(max, c.y));
+        for (i,&Cell{x,y,..}) in self.cells.iter().enumerate() {
+            piece.cells[i].x = max_y-y; 
+            piece.cells[i].y = x;
+        }
+        piece
     }
-    //pub fn rotate3(self) -> Piece {
-    //    let piece = self.copy();
-    //    let max_y = piece.cells.iter().fold(
-    //        std::usize::MIN, 
-    //        |max, c| std::cmp::max(max, c.y));
-    //    for (i,&Cell{x,y,..}) in self.cells.iter().enumerate() {
-    //        a[i] = (self.x+max_y-y, self.y+x)
-    //    }
-    //    a
-    //}
-
+    /*
     pub fn set_coords(&mut self, points: &[(usize,usize); 4]) {
         //assumes these points are valid and changes cell coords
         for (i, c) in &mut self.cells.iter_mut().enumerate() {
             (*c).x = points[i].0 - self.x;
             (*c).y = points[i].1 - self.y;
         }
-    }
+    }*/
 	pub fn new(x:usize, y:usize, s:Shape, c:Color) -> Piece {
         //(x,y) is top-left corner
         //let mut cells = [Cell::blank(); 4];
