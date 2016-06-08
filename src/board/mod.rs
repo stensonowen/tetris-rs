@@ -84,20 +84,15 @@ pub mod board {
         }
         pub fn rotate3(&mut self) {
             //rotate without calling something on Piece
-            //self.blockgg
             if let Some(mut clone) = self.block {
-
-            }
-            //if let Some(ref mut block) = self.block {
-            if let Some(mut block) = self.block {
-                let max_y = block.cells.iter().fold(
+                let max_y = clone.cells.iter().fold(
                     std::usize::MIN,
                     |max, c| std::cmp::max(max, c.y));
-                if block.cells.iter()
+                if clone.cells.iter()
                     .all(|&Cell{x,y,..}| 
                          self.get(
-                                 max_y-y+block.x, 
-                                 x+block.y)
+                                 max_y-y+clone.x, 
+                                 x+clone.y)
                             .is_none()) {
                     if let Some(ref mut block) = self.block {
                         for cell in block.cells.iter_mut() {
@@ -118,7 +113,61 @@ pub mod board {
              * or in Piece (that's where rotate is.
              * Should I move rotate?
              */
-            true
+            if let Some(mut clone) = self.block {
+                let points = [(0i32,0i32); 4];
+                //clone.cells.iter().map(|_| 0);
+                if clone.cells.iter().all(
+                    |&Cell{x,y,..}|
+                    {
+                        let x_ = (x as i32) + dx;
+                        let y_ = (y as i32) + dy;
+                        if x_ < 0 || y_ < 0 {
+                            false
+                        } else {
+                            let x_ = x_ as usize;
+                            let y_ = y_ as usize;
+                            clone.x + x_ < WIDTH  && 
+                            clone.y + y_ < HEIGHT &&
+                                self.get(x_,y_).is_none()
+                        } 
+                    }) {
+                    //a valid move
+                    if let Some(ref mut block) = self.block {
+                        for cell in block.cells.iter_mut() {
+                            cell.x = ((cell.x as i32) + dx) as usize;
+                            cell.y = ((cell.y as i32) + dy) as usize;
+
+                        }
+                    }
+
+                }
+                //self.compatible4(a);
+                   
+                //if clone.cells.iter()
+                //    .all(|&Cell{x,y,..}|
+                //         self.get(
+                //             clone.x+x+dx 
+                true     
+            } else {
+                false
+            }
+        }
+        fn compatible4(&self, cells: &[(i32,i32);4]) -> bool {
+            //wtf is the best way to do this
+            cells.iter().all(|&(x,y)| 
+                             0<=x && (x as usize) < WIDTH &&
+                             0<=y && (y as usize) < HEIGHT &&
+                             //x < WIDTH && y < HEIGHT && 
+                             //self.get(x,y).is_none())
+                             self.get(
+                                     x as usize,
+                                     y as usize)
+                                 .is_none())
+        }
+        fn compatible3(&self, cells: &[Cell; 4]) -> bool {
+            cells.iter().all(|&Cell{x,y,..}| 
+                             x < WIDTH && y < HEIGHT && 
+                             self.get(x,y).is_none())
         }
 		fn compatible2(&self, p: &Piece) -> bool {
 			p.cells.iter().all(
