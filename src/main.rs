@@ -33,6 +33,8 @@ fn main() {
 
         //println!("{:?}", b.block);
         println!("{}", b);
-        std::thread::sleep_ms(500);
+        //std::thread::sleep_ms(500);
+        let t = std::time::Duration::from_millis(200);
+        std::thread::sleep(t);
     }
 }
