@@ -78,3 +78,5 @@ impl fmt::Display for Cell {
         write!(f, "{}", s)
     }
 }
+
+pub enum Direction { Down, Left, Right }

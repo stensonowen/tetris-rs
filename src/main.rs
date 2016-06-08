@@ -16,8 +16,19 @@ fn main() {
     //p.rotate_counterclockwise();
     //b.incorporate(&p);
     //println!("{}", b);
+    //
     b.new_piece();
-    b.rotate2();
-    println!("{}", b);
+    loop {
+        //println!("{:?}", b.block);
+        //b.rotate3();
+        //b.shift2(1,2);
+        //b.shift2(board::cell::Direction::Right);
+        //b.shift_left();
+        b.shift_right();
+        b.shift_down();
 
+        //println!("{:?}", b.block);
+        println!("{}", b);
+        std::thread::sleep_ms(500);
+    }
 }

@@ -152,6 +152,15 @@ pub mod board {
                 false
             }
         }
+        fn shift2(&mut self, dir: Direction) -> bool {
+            if let Some(mut clone) = self.block {
+                clone.shift(dir);
+                if self.compatible2(&clone) {
+                    self.block = Some(clone);
+                }
+            }
+            true
+        }
         fn compatible4(&self, cells: &[(i32,i32);4]) -> bool {
             //wtf is the best way to do this
             cells.iter().all(|&(x,y)| 
@@ -204,5 +213,16 @@ pub mod board {
             }
             b
         }
+        //for testing:
+        pub fn shift_left(&mut self) {
+            self.shift2(Direction::Left);
+        }
+        pub fn shift_right(&mut self) {
+            self.shift2(Direction::Right);
+        }
+        pub fn shift_down(&mut self) {
+            self.shift2(Direction::Down);
+        }
+
     }
 }
