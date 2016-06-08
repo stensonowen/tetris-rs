@@ -4,6 +4,7 @@ pub mod block;
 
 pub mod board {
     extern crate rand;
+    extern crate std;
     use board::block::cell::*;
     use board::block::*;
     use std::fmt;
@@ -17,7 +18,7 @@ pub mod board {
         //stores the actual table itself (2d array)
         //and the piece that is currently moving
         table: [[Option<Cell>; WIDTH]; HEIGHT],
-        block: Option<Piece>,
+        pub block: Option<Piece>,
         //block: Piece,
     }
 
@@ -25,8 +26,11 @@ pub mod board {
     impl fmt::Display for Board {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
             let mut copy = self.clone();
+            //println!("{:?}", copy.block);
             if let Some(piece) = copy.block {
                 copy.incorporate(&piece);
+            } else {
+                println!("failed to incorp");
             }
             try!(write!(f, "\n\t"));
             for i in copy.table.iter() {
@@ -66,33 +70,42 @@ pub mod board {
                     //(rand::random::<usize>() % WIDTH)-3,
                     //(rand::random::<usize>() % HEIGHT)-3,
                     WIDTH/2-1,
-                    0,
+                    2,
                     Shape::rand(),
                     Color::rand()));
         }
-        /*pub fn rotate(&mut self) {
-            //rotates the active piece if it can be rotated
-            //self.block.unwrap();
-            if let Some(mut block) = self.block {
-                let points = block.rotate();
-                if self.compatible(&points) {
-                    block.set_coords(&points);
-                    self.block = Some(block);
-                }
-            }
-            //if let Some(mut block) = self.block.clone() {
-            //    let points = block.rotate();
-            //    if self.compatible(&points) {
-            //        block.set_coords(&points);
-            //        self.block = Some(block);
-            //    }
-            //}
-        }*/
         pub fn rotate2(&mut self) {
             if self.block.is_some() {
                 let rotated = self.block.unwrap().rotate4();
                 if self.compatible2(&rotated) {
                     self.block = Some(rotated);
+                }
+            }
+        }
+        pub fn rotate3(&mut self) {
+            //rotate without calling something on Piece
+            //self.blockgg
+            if let Some(mut clone) = self.block {
+
+            }
+            //if let Some(ref mut block) = self.block {
+            if let Some(mut block) = self.block {
+                let max_y = block.cells.iter().fold(
+                    std::usize::MIN,
+                    |max, c| std::cmp::max(max, c.y));
+                if block.cells.iter()
+                    .all(|&Cell{x,y,..}| 
+                         self.get(
+                                 max_y-y+block.x, 
+                                 x+block.y)
+                            .is_none()) {
+                    if let Some(ref mut block) = self.block {
+                        for cell in block.cells.iter_mut() {
+                            let tmp = cell.x;
+                            cell.x = max_y - cell.y;
+                            cell.y = tmp;
+                        }
+                    }
                 }
             }
         }
@@ -114,12 +127,6 @@ pub mod board {
 				p.y+y < HEIGHT &&
 				self.get(x,y).is_none())
 		}
-        /*fn compatible(&self, 
-                      points: &[(usize,usize); 4]) -> bool {
-            points.iter().all( | &(x,y) | 
-                x<WIDTH && y<HEIGHT &&
-                    self.get(x,y).is_none())
-        }*/
         fn incorporate(&mut self, p: &Piece) {
             for &c in p.cells.iter() {
                 self.table[p.y+c.y][p.x+c.x] = Some(c);
