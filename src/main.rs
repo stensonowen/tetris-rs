@@ -18,6 +18,10 @@ fn main() {
     //println!("{}", b);
     //
     b.new_piece();
+    b.shift_left();
+    b.shift_left();
+    b.shift_left();
+    b.shift_left();
     loop {
         //println!("{:?}", b.block);
         //b.rotate3();

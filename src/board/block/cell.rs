@@ -79,4 +79,5 @@ impl fmt::Display for Cell {
     }
 }
 
-pub enum Direction { Down, Left, Right }
+#[derive(PartialEq)]
+pub enum Direction { Down, Left, Right, Counterclockwise }
