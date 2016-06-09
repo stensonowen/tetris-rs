@@ -5,7 +5,8 @@ pub mod block;
 pub mod board {
     extern crate rand;
     extern crate std;
-    extern crate ncurses;
+    extern crate pancurses;
+    //extern crate ncurses;
     use board::block::cell::*;
     use board::block::*;
     use std::fmt;
@@ -31,7 +32,6 @@ pub mod board {
             }
             let horiz: String = std::iter::repeat("-")
                 .take(WIDTH+1).collect();
-            //try!(write!(f, "\n\t"));
             try!(write!(f, "\n\t{}|\n\t|", horiz.clone()));
             for i in copy.table.iter() {
                 for j in i {
@@ -125,17 +125,30 @@ pub mod board {
             }
             b
         }
-        pub fn command(&mut self, command: i32) {
+        pub fn command(&mut self, input: pancurses::Input) {
             //ncurses::getch() returns i32
             use board::block::cell::Direction::*;
-            use ncurses::*;
-            let _success = match command {
+            //use ncurses::*;
+            use pancurses::Input::*;
+            let _success = match input {
                 //arros keys OR wasd OR hjkl
-                 97|104|KEY_LEFT    => self.shift(Left), 
-                100|108|KEY_RIGHT   => self.shift(Right),
-                115|106|KEY_DOWN    => self.shift(Down),
-                119|107|KEY_UP      => self.shift(Counterclockwise),
-                _                   => false,
+                KeyLeft 
+                    | Character('a') 
+                    | Character('h') 
+                    => self.shift(Left),
+                KeyRight
+                    | Character('d')
+                    | Character('l')
+                    => self.shift(Right),
+                KeyDown
+                    | Character('s')
+                    | Character('j')
+                    => self.shift(Down),
+                KeyUp
+                    | Character('w')
+                    | Character('k')
+                    => self.shift(Counterclockwise),
+                _   => false,
             };
         }
         pub fn update(&mut self) {
@@ -150,6 +163,7 @@ pub mod board {
                     if line.iter().all(|x| x.is_some()) {
                         //full line
                         println!("full line");
+                        //for shift in 
                     }
 
                 }
