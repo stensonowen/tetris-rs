@@ -1,6 +1,7 @@
 //block helper stuff
 
 extern crate rand;
+extern crate pancurses;
 use std::fmt;
 
 #[derive(Debug, Clone, Copy)]
@@ -18,6 +19,34 @@ impl Color {
             4 => Color::Blue,
             5 => Color::Indigo,
             _ => Color::Violet,
+        }
+    }
+    pub fn init_color_pairs() {
+        //where should this be??
+        //Color as u32 = valid conversion
+        use pancurses::*;
+        //apparently 0 not a valid option?!
+        init_pair(1, COLOR_RED,     COLOR_RED);
+        init_pair(2, COLOR_YELLOW,  COLOR_YELLOW);//orange
+        init_pair(3, COLOR_WHITE,   COLOR_WHITE);//no yllw :(
+        init_pair(4, COLOR_GREEN,   COLOR_GREEN);
+        init_pair(5, COLOR_BLUE,    COLOR_BLUE);
+        init_pair(6, COLOR_CYAN,    COLOR_CYAN);
+        init_pair(7, COLOR_MAGENTA, COLOR_MAGENTA);
+    }
+    pub fn to_pancurses2(&self) -> u64 {
+        *self as u64 + 1
+    }
+    pub fn to_pancurses(&self) -> i16 {
+        //define a custom color for orange/others?
+        match self {
+            &Color::Red     => pancurses::COLOR_RED,
+            &Color::Orange  => pancurses::COLOR_WHITE,    //?
+            &Color::Yellow  => pancurses::COLOR_YELLOW,
+            &Color::Green   => pancurses::COLOR_GREEN,
+            &Color::Blue    => pancurses::COLOR_BLUE,
+            &Color::Indigo  => pancurses::COLOR_CYAN,
+            &Color::Violet  => pancurses::COLOR_MAGENTA,
         }
     }
 }

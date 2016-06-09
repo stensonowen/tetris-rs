@@ -49,6 +49,7 @@ pub mod board {
 
     impl Board{
         pub fn new() -> Board {
+            Color::init_color_pairs();  //TODO: move this
             Board {
                 table: [[None; WIDTH]; HEIGHT],
                 block: None,
@@ -126,9 +127,7 @@ pub mod board {
             b
         }
         pub fn command(&mut self, input: pancurses::Input) {
-            //ncurses::getch() returns i32
             use board::block::cell::Direction::*;
-            //use ncurses::*;
             use pancurses::Input::*;
             let _success = match input {
                 //arros keys OR wasd OR hjkl
@@ -150,6 +149,29 @@ pub mod board {
                     => self.shift(Counterclockwise),
                 _   => false,
             };
+        }
+        pub fn print(&self, win: &pancurses::Window) {
+            //prints to pancurses window
+            //duplication maybe faster than alternate print?
+            //4 index checks per cell seems costly/unidiomatic
+            let mut clone = self.clone();
+            clone.incorporate2();
+            use pancurses::COLOR_PAIR;
+            for (y,row) in clone.table.iter().enumerate() {
+                for cell in row {
+                    //if let &Some(Cell{x,y,col}) = cell {
+                    if let &Some(Cell{x,y,col}) = cell {
+                        win.attrset(COLOR_PAIR(col.to_pancurses2()));
+                        win.printw(" ");
+                    } else {
+                        win.attrset(COLOR_PAIR(0));
+                        win.printw(" ");
+                    }
+                }
+                win.mv(y as i32, 0);    // \n
+            }
+            win.refresh();
+
         }
         pub fn update(&mut self) {
             //shift down and check for complete lines 
