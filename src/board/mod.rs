@@ -21,6 +21,7 @@ pub mod board {
         //and the piece that is currently moving
         table: [[Option<Cell>; WIDTH]; HEIGHT],
         block: Option<Piece>,
+        //TODO: Switch to Option<Color> instead?
     }
 
 
@@ -154,6 +155,8 @@ pub mod board {
             //prints to pancurses window
             //duplication maybe faster than alternate print?
             //4 index checks per cell seems costly/unidiomatic
+            //TODO: scale so blocks can exceed 1 character large
+            //TODO: border
             let mut clone = self.clone();
             clone.incorporate2();
             use pancurses::COLOR_PAIR;
@@ -162,7 +165,9 @@ pub mod board {
                     //if let &Some(Cell{x,y,col}) = cell {
                     if let &Some(Cell{x,y,col}) = cell {
                         //I swear to fuck I accidentally made yellow, how did I do it?! 
-                        //win.attrset(COLOR_PAIR(col.to_pancurses2()) | pancurses::A_COLOR);
+                        //I thought it was COLOR_PAIR()|A_COLOR, but ??
+                        //win.attrset(COLOR_PAIR(col.to_pancurses2()));
+                        win.attrset(col.to_pancurses3());
                         let ch = match col {
                             Color::Red => "R",
                             Color::Orange => "O",
@@ -172,23 +177,11 @@ pub mod board {
                             Color::Indigo => "I",
                             Color::Violet => "V",
                         };
-                        //win.attrset(pancurses::A_COLOR | COLOR_PAIR(col.to_pancurses2()));
-                        win.attrset(COLOR_PAIR(col.to_pancurses2()) | pancurses::A_NORMAL);
-                        //win.attrset(COLOR_PAIR(col.to_pancurses2() | pancurses::A_COLOR));
-                        //if col == Color::Yellow {
-                        //    win.attrset(COLOR_PAIR(col.to_pancurses2() | pancurses::A_COLOR));
-                        //    win.printw("Y");
-                        //} else {
-                        //    win.attrset(COLOR_PAIR(col.to_pancurses2() ));
-                        //    win.printw("X");
-                        //}
-                        //win.attrset(col.to_pancurses2() | pancurses::A_COLOR);
                         win.printw(ch);
-                        //win.printw("X");
 
                     } else {
                         win.attrset(COLOR_PAIR(0));
-                        win.printw("?");
+                        win.printw(" ");
                     }
                 }
                 win.mv(y as i32, 0);    // \n

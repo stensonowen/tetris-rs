@@ -4,7 +4,7 @@ extern crate rand;
 extern crate pancurses;
 use std::fmt;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Color { Red, Orange, Yellow, Green, Blue, Indigo, Violet, }
 
 impl Color {
@@ -26,13 +26,29 @@ impl Color {
         //Color as u32 = valid conversion
         use pancurses::*;
         //apparently 0 not a valid option?!
-        init_pair(1, COLOR_RED,     COLOR_RED);
-        init_pair(2, COLOR_YELLOW,  COLOR_YELLOW);//orange
-        init_pair(3, COLOR_WHITE,   COLOR_WHITE);//no yllw :(
-        init_pair(4, COLOR_GREEN,   COLOR_GREEN);
-        init_pair(5, COLOR_BLUE,    COLOR_BLUE);
-        init_pair(6, COLOR_CYAN,    COLOR_CYAN);
-        init_pair(7, COLOR_MAGENTA, COLOR_MAGENTA);
+        //init_pair(1, COLOR_RED,     COLOR_RED);
+        //init_pair(2, COLOR_YELLOW,  COLOR_YELLOW);//orange
+        //init_pair(3, COLOR_WHITE, COLOR_WHITE);//no yllw :(
+        //init_pair(4, COLOR_GREEN,   COLOR_GREEN);
+        //init_pair(5, COLOR_BLUE,    COLOR_BLUE);
+        //init_pair(6, COLOR_CYAN,    COLOR_CYAN);
+        //init_pair(7, COLOR_MAGENTA, COLOR_MAGENTA);
+        init_pair(1, COLOR_BLACK,  COLOR_RED);
+        init_pair(2, COLOR_BLACK,  COLOR_YELLOW);//orange
+        init_pair(3, COLOR_BLACK,   COLOR_WHITE);//no yllw :(
+        init_pair(4, COLOR_BLACK,   COLOR_GREEN);
+        init_pair(5, COLOR_BLACK,    COLOR_BLUE);
+        init_pair(6, COLOR_BLACK,    COLOR_CYAN);
+        init_pair(7, COLOR_BLACK, COLOR_MAGENTA);
+    }
+    pub fn to_pancurses3(&self) -> u64 {
+        use self::Color::*;
+        let mut cp = pancurses::COLOR_PAIR(*self as u64 + 1);
+        //cp |= pancurses::A_COLOR;
+        //if *self == Yellow {
+        //    cp |= pancurses::A_COLOR;
+        //}
+        cp
     }
     pub fn to_pancurses2(&self) -> u64 {
         *self as u64 + 1

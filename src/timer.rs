@@ -1,5 +1,5 @@
 
-mod time {
+pub mod timer {
     //helper module that spawns a thread to keep track of time
     //every `DELAY` milliseconds, Timer.0 is set to true
     //and is not reset to false until it is checked on
@@ -7,7 +7,7 @@ mod time {
     use std::thread;
     use std::time::Duration;
 
-    const DELAY: u64 = 1000; //ms
+    pub const DELAY: u64 = 500; //ms
 
 	pub struct Timer (
         Arc<Mutex<bool>>
@@ -30,7 +30,7 @@ mod time {
                                }});
             t
         }
-        fn is_expired(&mut self) -> bool {
+        pub fn is_expired(&mut self) -> bool {
             //checks if timer has been tripped
             //if so, return true and reset it
             //otherwise return false
